@@ -1,1 +1,1 @@
-mocha ./tests/api.test.js
+mocha --file tests/api.test.js

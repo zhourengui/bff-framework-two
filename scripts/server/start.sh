@@ -1,1 +1,1 @@
-cross-env NODE_ENV=production nodemon ./dist/app.js
+NODE_ENV=development nodemon  ./dist/app.js

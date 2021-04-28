@@ -1,1 +1,1 @@
-node ./tests/e2e.test.js
+node tests/e2e.test.js

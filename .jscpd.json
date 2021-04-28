@@ -1,6 +1,5 @@
 {
-  "threshold": 0,
-  "reporters": ["html", "console", "badge"],
-  "ignore": ["**/__snapshots__/**"],
-  "absolute": true
+    "threshold": 0,
+    "reporters": ["html", "console"],
+    "ignore": ["**/__snapshots__/**"]
 }

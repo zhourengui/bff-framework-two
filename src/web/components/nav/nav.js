@@ -1,7 +1,4 @@
-import "./nav.css"
-
-function alert() {
-  alert("Nav Alert")
+function nav() {
+    console.log('nav init');
 }
-
-export default alert
+export default nav;

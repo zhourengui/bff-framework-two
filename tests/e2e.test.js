@@ -1,17 +1,15 @@
-const { chromium } = require("playwright")
-const expect = require("chai").expect
+const playwright = require('playwright');
+const expect = require('chai').expect;
 
-;(async () => {
-  for (const browserType of ["chromium"]) {
-    const browser = await chromium.launch({
-      devtools: true,
-    })
-    const context = await browser.newContext()
-    const page = await context.newPage()
-    await page.goto("http://localhost:3000/")
-    const content = await page.textContent("#btn")
-    expect(content).equal("按钮")
-    await page.screenshot({ path: `screenshot/example-${browserType}.png` })
-    await browser.close()
-  }
-})()
+(async () => {
+    const browser = await playwright['chromium'].launch();
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto('http://localhost:3001/books/list');
+    const content = await page.textContent("#btn");
+    expect(content).equal('点击1');
+    await page.screenshot({
+        path: `report/example-chromium.png`
+    });
+    await browser.close();
+})();

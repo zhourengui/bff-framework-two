@@ -1,21 +1,23 @@
-import Router from "@koa/router"
-import BooksController from "./BooksController"
-import ApiController from "./ApiController"
-const apiController = new ApiController()
-const booksController = new BooksController()
+import Router from '@koa/router';
+import IndexController from './IndexController';
+import BooksController from './BooksController';
+import ApiController from './ApiController';
 
-const router = Router()
+const router = new Router();
+const indexController = new IndexController();
+const booksController = new BooksController();
+const apiController = new ApiController();
 
 function initController(app) {
-  router.get("/books/home", booksController.actionHome)
-  router.get("/books/list", booksController.actionList)
-  router.get("/books/update", booksController.actionUpdate)
-  router.get("/books/detail", booksController.actionDetail)
-  router.get("/api/getDataList", apiController.actionDataList)
-  app
-    .use(router.routes())
-    // 丰富header头
-    .use(router.allowedMethods())
+    router.get('/', indexController.actionIndex);
+    router.get('/api/getBooksList', apiController.actionBooksList);
+    router.get('/books/list', booksController.actionBooksList);
+    router.get('/books/create', booksController.actionBooksCreate);
+    app
+        .use(router.routes())
+        // ctx.staus 404  response 对象header头
+        .use(router.allowedMethods());
 }
 
-module.exports = initController
+
+export default initController;

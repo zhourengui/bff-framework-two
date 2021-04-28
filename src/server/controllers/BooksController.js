@@ -1,42 +1,27 @@
-import BooksModel from "../models/BooksModel"
-import Controller from "./Controller"
+import Controller from './Controller';
+import BooksModel from '../models/BooksModel';
 
 class BooksController extends Controller {
-  constructor() {
-    super()
-  }
-
-  async actionHome(ctx) {
-    const booksModel = new BooksModel()
-    const result = await booksModel.getBooksList()
-    ctx.body = await ctx.render("./books/home/home.html", {
-      data: result.data,
-    })
-  }
-
-  async actionList(ctx) {
-    const booksModel = new BooksModel()
-    const result = await booksModel.getBooksList()
-    ctx.body = await ctx.render("./books/list/list.html", {
-      data: result.data,
-    })
-  }
-
-  async actionDetail(ctx) {
-    const booksModel = new BooksModel()
-    const result = await booksModel.getBooksList()
-    ctx.body = await ctx.render("./books/detail/detail.html", {
-      data: result.data,
-    })
-  }
-
-  async actionUpdate(ctx) {
-    const booksModel = new BooksModel()
-    const result = await booksModel.getBooksList()
-    ctx.body = await ctx.render("./books/update/update.html", {
-      data: result.data,
-    })
-  }
+    constructor() {
+        super();
+    }
+    async actionBooksList(ctx) {
+        const booksModel = new BooksModel();
+        const result = await booksModel.getBooksList()
+        ctx.body = await ctx.render('books/pages/list', {
+            data: [{
+                    id: 1,
+                    name: "图书一"
+                },
+                {
+                    id: 2,
+                    name: "图书二"
+                }
+            ]
+        });
+    }
+    async actionBooksCreate(ctx) {
+        ctx.body = await ctx.render('books/pages/create')
+    }
 }
-
-export default BooksController
+export default BooksController;

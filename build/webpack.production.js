@@ -1,37 +1,38 @@
-const path = require("path")
-const { minify } = require("html-minifier")
-const CopyWebpackPlugin = require("copy-webpack-plugin")
+const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
+const minify = require('html-minifier').minify;
 module.exports = {
-  output: {
-    path: path.resolve(__dirname, "../dist/assets/"),
-    filename: "[name].[contenthash:5].bundle.js",
-  },
-  plugins: [
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.join(__dirname, "../src/web/views/layouts/"),
-          to: "../web/views/layouts/",
-          filter: (path) => !/\.(js|css)$/.test(path),
-          transform(context) {
-            return minify(context.toString("utf-8"), {
-              removeAttributeQuotes: true,
-              collapseBooleanAttributes: true,
-            })
-          },
-        },
-        {
-          from: path.join(__dirname, "../src/web/components/"),
-          to: "../web/components",
-          filter: (path) => !/\.(js|css)$/.test(path),
-          transform(context) {
-            return minify(context.toString("utf-8"), {
-              removeAttributeQuotes: true,
-              collapseBooleanAttributes: true,
-            })
-          },
-        },
-      ],
-    }),
-  ],
+    output: {
+        path: path.join(__dirname, '../dist/assets'),
+        filename: 'scripts/[name].[contenthash:5].bundle.js'
+    },
+    plugins: [
+        new CopyPlugin({
+            patterns: [{
+                    from: path.join(__dirname, "../src/web/views/layouts/layout.html"),
+                    to: "../views/layouts/layout.html",
+                    transform(content, absoluteFrom) {
+                        return minify(content.toString("utf-8"), {
+                            collapseWhitespace: true
+                        });
+                    },
+                },
+                {
+                    from: path.join(__dirname, "../src/web/components/"),
+                    to: "../components",
+                    filter: url => {
+                        if (/\.(js|css)$/.test(url)) {
+                            return false;
+                        }
+                        return true;
+                    },
+                    transform(content, absoluteFrom) {
+                        return minify(content.toString("utf-8"), {
+                            collapseWhitespace: true
+                        });
+                    },
+                },
+            ],
+        }),
+    ]
 }

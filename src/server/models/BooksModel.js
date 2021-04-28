@@ -1,21 +1,8 @@
-import SafeRequest from "../utils/SafeRequest"
+import SafeRequest from '../utils/safeRequest';
 
 class BooksModel {
-  getBooksList() {
-    return {
-      data: [
-        {
-          name: "西游记",
-          price: "99.2",
-          author: "施耐庵",
-        },
-      ],
+    getBooksList() {
+        return SafeRequest.fetch('http://localhost/basic/web/index.php?r=books');
     }
-    // return SafeRequest.fetch({
-    //   url: "http://localhost/getBooksList",
-    //   method: "GET",
-    // })
-  }
 }
-
-export default BooksModel
+export default BooksModel;

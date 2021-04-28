@@ -1,71 +1,50 @@
+const { argv } = require("yargs")
 const path = require("path")
-const yargs = require("yargs/yargs")
-const { hideBin } = require("yargs/helpers")
-const argv = yargs(hideBin(process.argv)).argv
 const _mode = argv.mode || "development"
 const envConfig = require(`./build/webpack.${_mode}.js`)
 const { merge } = require("webpack-merge")
-const files = require("glob").sync("./src/web/views/**/*.entry.js")
+const glob = require("glob")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
-const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 const HtmlAfterPlugin = require("./build/HtmlAfterPlugin")
-const { resolve } = require("path")
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 
-function generateEntry(config) {
-  let entries = {
-    ...config.entries,
-  }
-  for (let i = 0; i < files.length; i++) {
-    entries[/(\w+)\.entry\.js$/.exec(files[i])[1]] = files[i]
-  }
-  return entries
-}
-
-function generatePlugins(config) {
-  let plugins = [...config.plugins]
-  for (let i = 0; i < files.length; i++) {
-    plugins.push(
+/* 文件遍历 入口 模板 */
+const files = glob.sync("./src/web/views/**/*.entry.js")
+const entries = {}
+const htmlPlugins = []
+files.forEach((url) => {
+  if (/([a-zA-Z]+-[a-zA-Z]+)\.entry\.js/.test(url)) {
+    const entryKey = RegExp.$1
+    const [pagesName, template] = entryKey.split("-")
+    entries[entryKey] = url
+    htmlPlugins.push(
       new HtmlWebpackPlugin({
-        template: `${/([\s\S]+)\.entry\.js$/.exec(files[i])[1]}.html`,
-        filename: `../web/views/books/${
-          /(\w+)\.entry\.js$/.exec(files[i])[1]
-        }/${/(\w+)\.entry\.js$/.exec(files[i])[1]}.html`,
-        chunks: ["runtime", /(\w+)\.entry\.js$/.exec(files[i])[1]],
+        filename: `../views/${pagesName}/pages/${template}.html`,
+        template: `./src/web/views/${pagesName}/pages/${template}.html`,
+        chunks: ["runtime", entryKey],
         inject: false,
       })
     )
   }
-  return plugins
-}
-
+})
 const baseConfig = {
   mode: _mode,
-  entry: {},
-  module: {
-    rules: [
-      {
-        test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, "css-loader"],
-      },
-    ],
-  },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new HtmlAfterPlugin(),
-    new MiniCssExtractPlugin({}),
-  ],
+  entry: entries,
   optimization: {
     runtimeChunk: "single",
   },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: ["babel-loader"],
+      },
+    ],
+  },
+  plugins: [...htmlPlugins, new HtmlAfterPlugin()],
   resolve: {
     alias: {
-      "@": resolve("./src/web"),
+      "@": path.resolve("./src/web"),
     },
   },
 }
-
-baseConfig.entry = generateEntry(baseConfig)
-baseConfig.plugins = generatePlugins(baseConfig)
-
 module.exports = merge(baseConfig, envConfig)
