@@ -1,441 +1,49 @@
-# Node BFF
+# 搭建 BFF 架构（服务于前端的后端）2
 
-├── README.md
-├── app.js
-├── assets
-│   ├── css
-│   ├── favicon.ico
-│   └── js
-├── cheese.log
-├── config
-│   └── index.js
-├── controllers
-│   ├── ApiController.js
-│   ├── BooksController.js
-│   ├── IndexController.js
-│   ├── SiteController.php
-│   ├── controller.js
-│   └── index.js
-├── demo.js
-├── logs
-│   └── error.log
-├── middlewares
-│   └── ErrorHandler.js
-├── models
-│   └── BooksModel.js
-├── node_modules
-│   ├── @babel
-│   ├── @koa
-│   ├── @nicolo-ribaudo
-│   ├── @sindresorhus
-│   ├── @szmarczak
-│   ├── @types
-│   ├── @ungap
-│   ├── abbrev
-│   ├── accepts
-│   ├── agent-base
-│   ├── align-text
-│   ├── ansi-align
-│   ├── ansi-colors
-│   ├── ansi-regex
-│   ├── ansi-styles
-│   ├── any-promise
-│   ├── anymatch
-│   ├── argparse
-│   ├── arr-diff
-│   ├── arr-flatten
-│   ├── arr-union
-│   ├── array-unique
-│   ├── assertion-error
-│   ├── assign-symbols
-│   ├── async
-│   ├── async-each
-│   ├── asynckit
-│   ├── atob
-│   ├── axios
-│   ├── babel-plugin-dynamic-import-node
-│   ├── balanced-match
-│   ├── base
-│   ├── binary-extensions
-│   ├── boxen
-│   ├── brace-expansion
-│   ├── braces
-│   ├── browser-stdout
-│   ├── browserslist
-│   ├── buffer-crc32
-│   ├── buffer-from
-│   ├── cache-base
-│   ├── cache-content-type
-│   ├── cacheable-request
-│   ├── call-bind
-│   ├── camelcase
-│   ├── caniuse-lite
-│   ├── center-align
-│   ├── chai
-│   ├── chalk
-│   ├── check-error
-│   ├── chokidar
-│   ├── ci-info
-│   ├── class-utils
-│   ├── cli-boxes
-│   ├── cliui
-│   ├── clone-response
-│   ├── co
-│   ├── collection-visit
-│   ├── color-convert
-│   ├── color-name
-│   ├── colorette
-│   ├── combined-stream
-│   ├── commander
-│   ├── commondir
-│   ├── component-emitter
-│   ├── concat-map
-│   ├── configstore
-│   ├── content-disposition
-│   ├── content-type
-│   ├── convert-source-map
-│   ├── cookiejar
-│   ├── cookies
-│   ├── copy-descriptor
-│   ├── core-js
-│   ├── core-js-compat
-│   ├── core-util-is
-│   ├── crypto-random-string
-│   ├── date-format
-│   ├── debug
-│   ├── decamelize
-│   ├── decode-uri-component
-│   ├── decompress-response
-│   ├── deep-eql
-│   ├── deep-equal
-│   ├── deep-extend
-│   ├── defer-to-connect
-│   ├── define-properties
-│   ├── define-property
-│   ├── delayed-stream
-│   ├── delegates
-│   ├── depd
-│   ├── destroy
-│   ├── diff
-│   ├── dot-prop
-│   ├── duplexer3
-│   ├── ee-first
-│   ├── electron-to-chromium
-│   ├── emoji-regex
-│   ├── encodeurl
-│   ├── end-of-stream
-│   ├── es-abstract
-│   ├── es-to-primitive
-│   ├── escalade
-│   ├── escape-goat
-│   ├── escape-html
-│   ├── escape-string-regexp
-│   ├── esprima
-│   ├── esutils
-│   ├── expand-brackets
-│   ├── extend-shallow
-│   ├── extglob
-│   ├── extract-zip
-│   ├── fast-safe-stringify
-│   ├── fd-slicer
-│   ├── fill-range
-│   ├── find-cache-dir
-│   ├── find-up
-│   ├── flat
-│   ├── flatted
-│   ├── follow-redirects
-│   ├── for-in
-│   ├── form-data
-│   ├── formidable
-│   ├── fragment-cache
-│   ├── fresh
-│   ├── fs-extra
-│   ├── fs-readdir-recursive
-│   ├── fs.realpath
-│   ├── fsevents
-│   ├── function-bind
-│   ├── gensync
-│   ├── get-caller-file
-│   ├── get-func-name
-│   ├── get-intrinsic
-│   ├── get-stream
-│   ├── get-value
-│   ├── glob
-│   ├── glob-parent
-│   ├── global-dirs
-│   ├── globals
-│   ├── got
-│   ├── graceful-fs
-│   ├── growl
-│   ├── has
-│   ├── has-flag
-│   ├── has-symbols
-│   ├── has-value
-│   ├── has-values
-│   ├── has-yarn
-│   ├── he
-│   ├── homedir-polyfill
-│   ├── http-assert
-│   ├── http-cache-semantics
-│   ├── http-errors
-│   ├── https-proxy-agent
-│   ├── ignore-by-default
-│   ├── import-lazy
-│   ├── imurmurhash
-│   ├── inflight
-│   ├── inherits
-│   ├── ini
-│   ├── is-accessor-descriptor
-│   ├── is-binary-path
-│   ├── is-buffer
-│   ├── is-callable
-│   ├── is-ci
-│   ├── is-data-descriptor
-│   ├── is-date-object
-│   ├── is-descriptor
-│   ├── is-extendable
-│   ├── is-extglob
-│   ├── is-fullwidth-code-point
-│   ├── is-generator-function
-│   ├── is-glob
-│   ├── is-installed-globally
-│   ├── is-negative-zero
-│   ├── is-npm
-│   ├── is-number
-│   ├── is-obj
-│   ├── is-path-inside
-│   ├── is-plain-obj
-│   ├── is-plain-object
-│   ├── is-regex
-│   ├── is-symbol
-│   ├── is-typedarray
-│   ├── is-windows
-│   ├── is-yarn-global
-│   ├── isarray
-│   ├── isexe
-│   ├── isobject
-│   ├── jpeg-js
-│   ├── js-tokens
-│   ├── js-yaml
-│   ├── jsesc
-│   ├── json-buffer
-│   ├── json5
-│   ├── jsonfile
-│   ├── keygrip
-│   ├── keyv
-│   ├── kind-of
-│   ├── koa
-│   ├── koa-compose
-│   ├── koa-convert
-│   ├── koa-send
-│   ├── koa-static
-│   ├── koa-swig
-│   ├── koa2-connect-history-api-fallback
-│   ├── latest-version
-│   ├── lazy-cache
-│   ├── locate-path
-│   ├── lodash
-│   ├── log-symbols
-│   ├── log4js
-│   ├── longest
-│   ├── lowercase-keys
-│   ├── lru-cache
-│   ├── make-dir
-│   ├── map-cache
-│   ├── map-visit
-│   ├── media-typer
-│   ├── methods
-│   ├── micromatch
-│   ├── mime
-│   ├── mime-db
-│   ├── mime-types
-│   ├── mimic-response
-│   ├── minimatch
-│   ├── minimist
-│   ├── mixin-deep
-│   ├── mocha
-│   ├── ms
-│   ├── nanoid
-│   ├── nanomatch
-│   ├── negotiator
-│   ├── node-environment-flags
-│   ├── node-modules-regexp
-│   ├── node-releases
-│   ├── nodemon
-│   ├── nopt
-│   ├── normalize-path
-│   ├── normalize-url
-│   ├── object-copy
-│   ├── object-inspect
-│   ├── object-keys
-│   ├── object-visit
-│   ├── object.assign
-│   ├── object.getownpropertydescriptors
-│   ├── object.pick
-│   ├── on-finished
-│   ├── once
-│   ├── only
-│   ├── optimist
-│   ├── p-cancelable
-│   ├── p-limit
-│   ├── p-locate
-│   ├── p-try
-│   ├── package-json
-│   ├── parse-passwd
-│   ├── parseurl
-│   ├── pascalcase
-│   ├── path-dirname
-│   ├── path-exists
-│   ├── path-is-absolute
-│   ├── path-to-regexp
-│   ├── pathval
-│   ├── pend
-│   ├── picomatch
-│   ├── pify
-│   ├── pirates
-│   ├── pkg-dir
-│   ├── playwright
-│   ├── pngjs
-│   ├── posix-character-classes
-│   ├── prepend-http
-│   ├── process-nextick-args
-│   ├── progress
-│   ├── proper-lockfile
-│   ├── proxy-from-env
-│   ├── pstree.remy
-│   ├── pump
-│   ├── pupa
-│   ├── qs
-│   ├── randombytes
-│   ├── rc
-│   ├── readable-stream
-│   ├── readdirp
-│   ├── regenerate
-│   ├── regenerate-unicode-properties
-│   ├── regenerator-runtime
-│   ├── regenerator-transform
-│   ├── regex-not
-│   ├── regexpu-core
-│   ├── registry-auth-token
-│   ├── registry-url
-│   ├── regjsgen
-│   ├── regjsparser
-│   ├── remove-trailing-separator
-│   ├── repeat-element
-│   ├── repeat-string
-│   ├── require-directory
-│   ├── require-main-filename
-│   ├── resolve-path
-│   ├── resolve-url
-│   ├── responselike
-│   ├── ret
-│   ├── retry
-│   ├── rfdc
-│   ├── right-align
-│   ├── rimraf
-│   ├── safe-buffer
-│   ├── safe-regex
-│   ├── semver
-│   ├── semver-diff
-│   ├── serialize-javascript
-│   ├── set-blocking
-│   ├── set-value
-│   ├── setprototypeof
-│   ├── signal-exit
-│   ├── slash
-│   ├── snapdragon
-│   ├── snapdragon-node
-│   ├── snapdragon-util
-│   ├── source-map
-│   ├── source-map-resolve
-│   ├── source-map-support
-│   ├── source-map-url
-│   ├── split-string
-│   ├── sprintf-js
-│   ├── static-extend
-│   ├── statuses
-│   ├── streamroller
-│   ├── string-width
-│   ├── string.prototype.trimend
-│   ├── string.prototype.trimstart
-│   ├── string_decoder
-│   ├── strip-ansi
-│   ├── strip-json-comments
-│   ├── superagent
-│   ├── supertest
-│   ├── supports-color
-│   ├── swig-templates
-│   ├── term-size
-│   ├── thenify
-│   ├── to-fast-properties
-│   ├── to-object-path
-│   ├── to-readable-stream
-│   ├── to-regex
-│   ├── to-regex-range
-│   ├── toidentifier
-│   ├── touch
-│   ├── tsscmp
-│   ├── type-detect
-│   ├── type-fest
-│   ├── type-is
-│   ├── typedarray-to-buffer
-│   ├── uglify-js
-│   ├── uglify-to-browserify
-│   ├── undefsafe
-│   ├── unicode-canonical-property-names-ecmascript
-│   ├── unicode-match-property-ecmascript
-│   ├── unicode-match-property-value-ecmascript
-│   ├── unicode-property-aliases-ecmascript
-│   ├── union-value
-│   ├── unique-string
-│   ├── universalify
-│   ├── unset-value
-│   ├── upath
-│   ├── update-notifier
-│   ├── urix
-│   ├── url-parse-lax
-│   ├── use
-│   ├── util-deprecate
-│   ├── utils-merge
-│   ├── v8flags
-│   ├── vary
-│   ├── which
-│   ├── which-module
-│   ├── wide-align
-│   ├── widest-line
-│   ├── window-size
-│   ├── wordwrap
-│   ├── workerpool
-│   ├── wrap-ansi
-│   ├── wrappy
-│   ├── write-file-atomic
-│   ├── ws
-│   ├── xdg-basedir
-│   ├── y18n
-│   ├── yallist
-│   ├── yargs
-│   ├── yargs-parser
-│   ├── yargs-unparser
-│   ├── yauzl
-│   ├── ylru
-│   └── yocto-queue
-├── note.md
-├── package.json
-├── report
-│   └── example-chromium.png
-├── tests
-│   ├── api.test.js
-│   └── e2e.test.js
-├── utils
-│   ├── lodash.js
-│   ├── myUtils.js
-│   ├── safeRequest.js
-│   └── underscore.js
-├── views
-│   ├── books
-│   ├── index.html
-│   ├── index2.html
-│   └── index_backup.html
-└── yarn.lock
+## 好用的工具
 
-409 directories, 28 files
+### scripty
+
+主动找 scripts 目录
+
+集群编译
+
+preTest 在 test 之前触发，只需要添加 pre 就能实现
+
+### jscpd 检查代码重复率
+
+## WebComponent
+
+## 多页应用(MAP)
+
+### 模板
+
+swig
+
+### 区分打包环境
+
+### 多入口文件处理
+
+使用 glob 匹配文件
+
+多入口配置，通过遍历文件动态配置入口
+
+1. 用户 --> Controller --> 找到对应模板
+2. 通过 webpack 自动引入 js、css 自动注入到页面中
+
+### 问题
+
+#### 模版的 js、css 需要通过 plugins 插入
+
+## 编写 Plugin
+
+## 持续集成
+
+编写代码 提交代码 触发 ci 构建
+scp dist 到执行服务器 完成上线
+
+不同 scp
+docker build 构建一个镜像，上传到 dockerhub
+在服务器中 docker pull images
+
+监控平台
